@@ -6,7 +6,13 @@ public class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
-    for(int num = 1; num < n; num++) {
+    int temp = n;
+    int limit = 0;
+    while(temp > 0) {
+      temp /= 10;
+      limit++;
+    }
+    for(int num = n - 9*limit; num < n; num++) {
       if (check(num, n)) {
         System.out.println(num);
         return;
