@@ -1,2 +1,1 @@
-# algorithm
-algorithm and problem solving with java
+# algorithm with java
