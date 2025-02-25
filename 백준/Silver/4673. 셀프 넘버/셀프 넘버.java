@@ -1,8 +1,11 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public class Main {
   static int[] constCnt = new int[10001];
   public static void main(String[] args) throws IOException {
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     // 1 ~ 10,000 까지를 각각 n이라고 하고, d(n)을 구한다.
     for(int i=1; i<=10000; i++) {
       int num = i;
@@ -16,7 +19,11 @@ public class Main {
     }
     // 1 ~ 10,000 를 돌면서 0인 수를 출력한다.
     for(int i=1; i<= 10000; i++) {
-      if(constCnt[i]==0) System.out.println(i);
+      if (constCnt[i] == 0) {
+        bw.write(String.valueOf(i)+'\n');
+      }
     }
+    bw.flush();
+    bw.close();
   }
 }
