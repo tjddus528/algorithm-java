@@ -16,18 +16,18 @@ public class Main {
       t[i] = Integer.parseInt(st.nextToken());
       p[i] = Integer.parseInt(st.nextToken());
     }
-    // d[i] = i번째 상담을 했을 때, i일~퇴사날까지 얻는 최대 이익
+    // d[i] = i일~퇴사날까지 얻는 최대 이익
+    // d[i] = max(i일 상담을 하고 그 다음 상담 가능한 날짜부터 상담했을 때 최대 이익
+    //              vs i일 상담을 안하고, 다음 날부터의 최대 이익)
     int[] dp = new int[n+2];
     for(int i=n; i>0; i--){
-      if(t[i]+i > n+1) continue;
-      // 상담이 가능하다면(퇴사 전까지 상담을 끝낼 수 있다면, 퇴사일 = n+1일째)
-      dp[i] = p[i];
-      int max = 0;
-      for(int j=t[i]+i; j<=n; j++) max = Math.max(max, dp[j]);
-      dp[i] += max;
+      // 상담이 가능하다면(퇴사 전까지 상담을 끝낼 수 있다면), 퇴사일 = n+1일째
+      if(t[i]+i <= n+1) {
+        dp[i] = Math.max(p[i] + dp[t[i]+i], dp[i+1]);
+      } else {
+        dp[i] = dp[i+1];
+      }
     }
-    int result = 0;
-    for(int i=1; i<=n; i++) result = Math.max(result, dp[i]);
-    System.out.println(result);
+    System.out.println(dp[1]);
   }
 }
