@@ -3,9 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -23,7 +21,6 @@ public class Main {
     }
 
     int[] visited = new int[n+1];
-    int[] parent = new int[n+1];
     ArrayDeque<Integer> q = new ArrayDeque<>();
     q.offer(1);
     visited[1] = 1;
@@ -31,14 +28,13 @@ public class Main {
       int now = q.poll();
       for(int next: graph.get(now)) {
         if(visited[next]>0) continue;
-        visited[next] = visited[now]+1;
-        parent[next] = now;
+        visited[next] = now;
         q.offer(next);
       }
     }
     StringBuilder sb = new StringBuilder();
     for(int i=2; i<=n; i++) {
-      sb.append(parent[i]).append('\n');
+      sb.append(visited[i]).append('\n');
     }
     System.out.println(sb);
   }
