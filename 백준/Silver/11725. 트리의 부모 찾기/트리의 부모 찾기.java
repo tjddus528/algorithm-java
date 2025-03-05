@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Main {
 
     int[] visited = new int[n+1];
     int[] parent = new int[n+1];
-    Queue<Integer> q = new LinkedList<>();
+    ArrayDeque<Integer> q = new ArrayDeque<>();
     q.offer(1);
     visited[1] = 1;
     while(!q.isEmpty()) {
