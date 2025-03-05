@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -23,6 +22,7 @@ public class Main {
     }
 
     int[] visited = new int[n+1];
+    int[] parent = new int[n+1];
     Queue<Integer> q = new LinkedList<>();
     q.offer(1);
     visited[1] = 1;
@@ -31,15 +31,14 @@ public class Main {
       for(int next: graph.get(now)) {
         if(visited[next]>0) continue;
         visited[next] = visited[now]+1;
+        parent[next] = now;
         q.offer(next);
       }
     }
+    StringBuilder sb = new StringBuilder();
     for(int i=2; i<=n; i++) {
-      for(int v: graph.get(i)) {
-        if (visited[v] < visited[i]) {
-          System.out.println(v);
-        }
-      }
+      sb.append(parent[i]).append('\n');
     }
+    System.out.println(sb);
   }
 }
