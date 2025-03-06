@@ -1,45 +1,48 @@
 import java.util.*;
 class Solution {
-    static PriorityQueue<int[]> pq;
-    static int k;
     public int solution(int[][] jobs) {
-        pq = new PriorityQueue<>(new Comparator<int[]>() {
-            @Override
-            public int compare(int[] a, int[] b) {
-                if(a[1]>b[1]) return 1;
-                else if(a[1]==b[1]) return a[0]-b[0];
-                else return -1;
-            }
-        });
-        Arrays.sort(jobs, (a, b)->a[0]-b[0]);
+        // 우선순위큐 -> 소요 시간 기준 오름차순 정렬
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1,o2)-> o1[1]-o2[1]);
+        // {
+        //     if(o1[1]==o2[1]) return o1[0]-o2[0];
+        //     else if (o1[1] > o2[1]) return o1[1]-o2[1];
+        //     else return -1;
+        //     });
+        // 기존 배열 -> 요청 시간 기준 오름차순 정렬
+        Arrays.sort(jobs, (o1, o2)->o1[0]-o2[0]);
+        
+        int k = 0;
         int time = jobs[0][0];
         int last = jobs[jobs.length-1][0];
-        System.out.println(last);
         int process = 0;
-        offerNewJob(jobs, time);
-        while(!pq.isEmpty()) {
-            int[] job = pq.poll();
-            if (job[0] <= time) {
+        
+        while(true) {
+            // System.out.println("time:" +time);
+            // 현재 time 이전까지 요청된 작업들 pq에 추가
+            while(k<jobs.length && jobs[k][0] <= time) {
+                pq.add(jobs[k]);
+                k++;
+            }
+            // PriorityQueue<int[]> temp = new PriorityQueue<>(pq);
+            // while(!temp.isEmpty()) {
+            //     System.out.print(Arrays.toString(temp.poll()) + " ");
+            // }
+            // System.out.println();
+            // time내에 요청된 작업이 없지만, 
+            // 아직 작업들이 남아있다면 time을 늘려서 계속 진행
+            // 남은 작업이 없으면 break;
+            if (pq.isEmpty()) {
+                if(k<jobs.length) time++;
+                else break;
+            }
+            // 현재 시점에서 처리할 작업들이 우선순위에 따라 순차적으로 나옴
+            else {
+                int[] job = pq.poll();
                 time += job[1];
                 process += time - job[0];
-            } else {
-                time++;
-                pq.offer(job);
             }
-            // 갱신된 time 기준 새롭게 요청된 작업들 대기 큐에 넣기
-            offerNewJob(jobs, time);
         }
         return process/jobs.length;
     }
-    static void offerNewJob(int[][] jobs, int time) {
-        while(k<jobs.length) {
-            if(jobs[k][0] <= time) {
-                pq.offer(jobs[k]);
-                k++;
-            } else {
-                if(pq.isEmpty()) time++;
-                else return;
-            }
-        }
-    }
+    
 }
