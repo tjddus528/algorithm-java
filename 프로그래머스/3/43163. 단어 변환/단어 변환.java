@@ -1,3 +1,4 @@
+import java.util.*;
 class Solution {
     static int answer = 51;
     static String[] wordList;
@@ -5,8 +6,33 @@ class Solution {
     public int solution(String begin, String target, String[] words) {
         wordList = words;
         size = wordList.length;
-        dfs(begin, target, new boolean[size], 0);
+        // dfs(begin, target, new boolean[size], 0);
+        bfs(begin, target, new int[size+1]);
         return answer > 50 ? 0: answer;
+    }
+    static void bfs(String start, String target, int[] visited) {
+        ArrayDeque<String> q = new ArrayDeque<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        for(int i=0; i<size; i++) {
+            map.put(wordList[i], i);
+        }
+        map.put(start, size);
+        q.offer(start);
+        visited[map.get(start)] = 1;
+        while(!q.isEmpty()) {
+            String now = q.poll();
+            if(now.equals(target)) {
+                answer = visited[map.get(now)] - 1;
+                break;
+            }
+            for(int i=0; i<size; i++) {
+                if(visited[i]>0) continue;
+                if(compareCount(now, wordList[i])==1) {
+                    visited[i] = visited[map.get(now)] + 1;
+                    q.offer(wordList[i]);
+                }
+            }
+        }
     }
     static void dfs(String start, String target, boolean[] visited, int step) {
         if(start.equals(target)) {
