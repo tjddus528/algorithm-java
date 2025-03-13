@@ -1,33 +1,22 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
-    List<String[]> user = new ArrayList<>();
+    Map<Integer, String> nameDict = new HashMap<>();
+    List<int[]> user = new ArrayList<>();
     for(int i=0; i<n; i++) {
       StringTokenizer st = new StringTokenizer(br.readLine());
-      String age = st.nextToken();
+      int age = Integer.parseInt(st.nextToken());
       String name = st.nextToken();
-      user.add(new String[]{String.valueOf(i), age, name});
+      user.add(new int[]{i, age});
+      nameDict.put(i, name);
     }
-    user.sort((o1, o2) -> {
-      if(Objects.equals(o1[1], o1[2])) {
-        return Integer.parseInt(o1[0])-Integer.parseInt(o2[0]);
-      } else {
-        return Integer.parseInt(o1[1])-Integer.parseInt(o2[1]);
-      }
-    });
+    user.sort((Comparator.comparingInt(o -> o[1])));
     for(int i=0; i<n; i++) {
-      System.out.println(user.get(i)[1] + " " + user.get(i)[2]);
+      System.out.println(user.get(i)[1] + " " + nameDict.get(user.get(i)[0]));
     }
 
   }
