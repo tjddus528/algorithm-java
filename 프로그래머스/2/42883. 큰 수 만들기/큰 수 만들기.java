@@ -2,9 +2,9 @@ import java.util.*;
 class Solution {
     public String solution(String number, int k) {
         String answer = "";
-        Stack<Character> stack = new Stack<>();
+        Stack<Integer> stack = new Stack<>();
         for(int i=0; i<number.length(); i++) {
-            char n = number.charAt(i);
+            int n = (int)(number.charAt(i)) - 48;
             while(k>0 && !stack.isEmpty() && stack.peek() < n) {
                 stack.pop();
                 k--;
@@ -15,10 +15,13 @@ class Solution {
             stack.pop();
             k--;
         }
-        StringBuilder sb = new StringBuilder();
-        for(char c: stack) {
-            sb.append(c);
+        Stack<Integer> temp = new Stack<>();
+        while(!stack.isEmpty()){
+            temp.add(stack.pop());
         }
-        return sb.toString();
+        while(!temp.isEmpty()) {
+            answer += String.valueOf(temp.pop());
+        }
+        return answer;
     }
 }
