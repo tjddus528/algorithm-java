@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+  static StringBuilder sb = new StringBuilder();
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int n = Integer.parseInt(br.readLine());
@@ -16,8 +17,9 @@ public class Main {
     }
     user.sort((Comparator.comparingInt(o -> o[1])));
     for(int i=0; i<n; i++) {
-      System.out.println(user.get(i)[1] + " " + nameDict.get(user.get(i)[0]));
+      sb.append(user.get(i)[1]).append(" " + nameDict.get(user.get(i)[0])+"\n");
     }
-
+    System.out.println(sb);
+    br.close();
   }
 }
