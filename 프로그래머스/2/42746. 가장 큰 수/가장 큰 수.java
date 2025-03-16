@@ -8,12 +8,12 @@ class Solution {
         Arrays.sort(strList, (s1, s2) -> (s2+s2+s2).compareTo(s1+s1+s1));
         // System.out.println(Arrays.toString(strList));
         String str = String.join("", strList);
-        String answer = "";
+        StringBuilder sb = new StringBuilder();
         for(int i=0; i<str.length(); i++) {
-            if(answer=="" && str.charAt(i)=='0') continue;
-            else answer+=str.charAt(i);
+            if(sb.toString().isEmpty() && str.charAt(i)=='0') continue;
+            else sb.append(str.charAt(i));
         }
-        if(answer=="") return "0";
-        return answer;
+        if(sb.toString().isEmpty()) return "0";
+        return sb.toString();
     }
 }
