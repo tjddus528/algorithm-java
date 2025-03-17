@@ -10,19 +10,14 @@ public class Main {
     String[] data = br.readLine().split(" ");
     a = Integer.parseInt(data[0]);
     b = Integer.parseInt(data[1]);
-    dfs(a, 1);
-    if (answer >= 1000000000) {
-      answer = -1;
-    }
+    answer = dfs(b, 1);
     System.out.println(answer);
   }
-  static void dfs(long n, int step) {
-    if(n > b) return ;
-    if(n==b) {
-      answer = Math.min(answer, step);
-      return;
-    }
-    dfs(n*2, step+1);
-    dfs(Long.parseLong(n+"1"),step+1);
+  static int dfs(long n, int step) {
+    if(n < a) return -1;
+    if(n==a) return step;
+    if(n%10 == 1) return dfs(n/10,step+1);
+    if(n%2 == 0) return dfs(n/2, step+1);
+    return -1;
   }
 }
