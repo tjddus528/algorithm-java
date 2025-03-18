@@ -3,18 +3,17 @@ class Solution {
     public int solution(int[] priorities, int location) {
         int answer = 0;
         ArrayDeque<int[]> q = new ArrayDeque<>();
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
         for(int i=0; i<priorities.length; i++) {
             q.offer(new int[]{i, priorities[i]});
-            pq.offer(priorities[i]);
         }
+        Integer[] pr = Arrays.stream(priorities).boxed().toArray(Integer[]::new);
+        Arrays.sort(pr, Comparator.reverseOrder());
         int order = 1;
         while(!q.isEmpty()){
             int[] process = q.poll();
-            if(process[1]==pq.peek()) {
+            if(process[1]==pr[order-1]) {
                 if(process[0]==location) return order;
                 order++;
-                pq.poll();
                 continue;
             }
             else q.offer(process);
