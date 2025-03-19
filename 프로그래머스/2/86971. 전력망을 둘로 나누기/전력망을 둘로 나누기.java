@@ -1,7 +1,6 @@
 import java.util.*;
 class Solution {
     static boolean[] visited;
-    static int cnt;
     public int solution(int n, int[][] wires) {
         int answer = n;
         List<List<Integer>> graph;
@@ -16,8 +15,7 @@ class Solution {
             }
             for(int node = 1; node <= n; node++) {
                 if(!visited[node]) {
-                    cnt = 0;
-                    dfs(node, graph);
+                    int cnt = dfs(node, graph);
                     answer = Math.min(Math.abs(n-2*cnt), answer);
                     break;
                 }
@@ -26,12 +24,13 @@ class Solution {
         }
         return answer;
     }
-    static void dfs(int node, List<List<Integer>> graph) {
+    static int dfs(int node, List<List<Integer>> graph) {
         visited[node] = true;
-        cnt++;
+        int cnt = 1;
         for(int next: graph.get(node)) {
             if(visited[next]) continue;
-            dfs(next, graph);
+            cnt += dfs(next, graph);
         }
+        return cnt;
     }
 }
