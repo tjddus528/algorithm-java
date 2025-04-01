@@ -7,18 +7,18 @@ class Solution {
         int n = money.length;
         int[] dp = new int[n];
         dp[0] = money[0];
-        dp[1] = money[1];
-        dp[2] = money[0]+money[2];
-        for(int i=3; i<n-1; i++) {
-            dp[i] = Math.max(dp[i-2]+money[i], dp[i-3]+money[i]);
+        dp[1] = Math.max(money[0], money[1]);
+        for(int i=2; i<n-1; i++) {
+            dp[i] = Math.max(dp[i-2]+money[i], dp[i-1]);
         }
-        int result = Math.max(dp[n-2], dp[n-3]);
+        // System.out.println(Arrays.toString(dp));
+        int result = dp[n-2];
         dp[0] = 0;
         dp[1] = money[1];
-        dp[2] = money[2];
-        for(int i=3; i<n; i++) {
-            dp[i] = Math.max(dp[i-2]+money[i], dp[i-3]+money[i]);
+        for(int i=2; i<n; i++) {
+            dp[i] = Math.max(dp[i-2]+money[i], dp[i-1]);
         }
+        // System.out.println(Arrays.toString(dp));
         return Math.max(result, dp[n-1]);
     }
 }
