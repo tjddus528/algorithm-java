@@ -3,40 +3,33 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        String S = st.nextToken();
-        String E = st.nextToken();
-        String Q = st.nextToken();
+  static String S, E, Q;
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String[] data = br.readLine().split(" ");
+    S = data[0];
+    E = data[1];
+    Q = data[2];
 
-        Set<String> before = new HashSet<>();
-        Set<String> after = new HashSet<>();
-        Set<String> nameSet = new HashSet<>();
-        String str = null;
-        
-        while((str = br.readLine()) != null) {
-            String[] arr = str.split(" ");
-            String time = arr[0];
-            String name = arr[1];
+    Set<String> before = new HashSet<>();
+    Set<String> after = new HashSet<>();
+    int cnt = 0;
+    while(true){
+      String input = br.readLine();
+      if (input == null || input.equals(""))
+        break;
+      String[] member = input.split(" ");
+      String time = member[0];
+      String name = member[1];
 
-            nameSet.add(name);
-            if(S.compareTo(time) >= 0) {
-                before.add(name);
-            }else if(E.compareTo(time) <= 0 && Q.compareTo(time) >= 0) {
-                after.add(name);
-            }
-        }
-
-        int ans = 0;
-        for(String name : nameSet) {
-            if(before.contains(name) && after.contains(name)) {
-                ans += 1;
-            }
-        }
-        System.out.println(ans);
+      if(time.compareTo(S) <= 0) before.add(name);
+      else if(time.compareTo(E) >= 0 && time.compareTo(Q) <= 0) after.add(name);
     }
+    for(String name: before) {
+      if(after.contains(name)) cnt++;
+    }
+    System.out.println(cnt);
+  }
 }
