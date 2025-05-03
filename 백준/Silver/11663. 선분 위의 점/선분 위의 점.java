@@ -14,27 +14,27 @@ public class Main {
     m = Integer.parseInt(data[1]);
     arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
     Arrays.sort(arr);
+
+    StringBuilder sb = new StringBuilder();
     for(int i=0; i<m; i++) {
       StringTokenizer st = new StringTokenizer(br.readLine());
       int a = Integer.parseInt(st.nextToken());
       int b = Integer.parseInt(st.nextToken());
+      int start = Math.min(a, b);
+      int end = Math.max(a, b);
 
-      if (a > arr[n - 1]) {
-        System.out.println(0);
-        continue;
+      if (start > arr[n - 1] || end < arr[0])
+        sb.append(0).append("\n");
+      else {
+        int startIdx = binary_search_start(start);
+        int endIdx = binary_search_end(end);
+        sb.append(endIdx-startIdx+1).append('\n');
       }
-      if (b < arr[0]) {
-        System.out.println(0);
-        continue;
-      }
-
-      int aIdx = binary_search_upper(a);
-      int bIdx = binary_search_under(b);
-      System.out.println(aIdx<=bIdx?bIdx-aIdx+1:0);
     }
+    System.out.println(sb);
   }
   // arr에서 num보다 같거나 큰 숫자의 idx를 반환
-  static int binary_search_upper(int num) {
+  static int binary_search_start(int num) {
     int left = 0;
     int right = n-1;
     int result = right;
@@ -51,7 +51,7 @@ public class Main {
     return result;
   }
   // arr에서 num보다 같거나 작은 숫자의 idx를 반환
-  static int binary_search_under(int num) {
+  static int binary_search_end(int num) {
     int left = 0;
     int right = n-1;
     int result = left;
