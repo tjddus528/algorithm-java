@@ -24,21 +24,23 @@ public class Main {
             }
         }
         bfs(target[0], target[1]);
+        StringBuilder sb = new StringBuilder();
         for(int i=0; i<n; i++) {
             for(int j=0; j<m; j++) {
                 if (arr[i][j]==0) {
-                    System.out.print(0+" ");
+                    sb.append(0).append(" ");
                     continue;
                 }
                 if (visited[i][j] > 0) {
-                    System.out.print(visited[i][j]-1+" ");
+                    sb.append(visited[i][j]-1).append(" ");
                 }
                 else {
-                    System.out.print(-1+" ");
+                    sb.append(-1).append(" ");
                 }
             }
-            System.out.println();
+            sb.append('\n');
         }
+        System.out.println(sb);
     }
     static void bfs(int x, int y) {
         int[] dx = {-1, 1, 0, 0};
