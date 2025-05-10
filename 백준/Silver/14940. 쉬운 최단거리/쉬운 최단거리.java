@@ -1,68 +1,61 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int[][] graph;
-    static boolean[][] visited;
-    static int[][] result;
     static int n, m;
-    static int[] dx = {-1, 1, 0, 0}; // 상,하,좌,우
-    static int[] dy = {0, 0, -1, 1};
-    public static void main(String[] args) throws Exception{
+    static int[][] arr;
+    static int[] target;
+    static int[][] visited;
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-
-        graph = new int[n][m];
-        visited = new boolean[n][m];
-        result = new int[n][m];
-        int x=0, y=0;
-
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine(), " ");
-            for (int j = 0; j < m; j++) {
-                graph[i][j] = Integer.parseInt(st.nextToken());
-                if (graph[i][j] == 2) {
-                    x = i;
-                    y = j;
-                } else if (graph[i][j] == 0) {
-                    visited[i][j] = true;
-                }
+        String[] data = br.readLine().split(" ");
+        n = Integer.parseInt(data[0]);
+        m = Integer.parseInt(data[1]);
+        arr = new int[n][m];
+        visited = new int[n][m];
+        for(int i=0; i<n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j=0; j<m; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+                if(arr[i][j]==2) target = new int[]{i,j};
             }
         }
-        bfs(x, y);
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (!visited[i][j]) {
-                    result[i][j] = -1;
+        bfs(target[0], target[1]);
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                if (arr[i][j]==0) {
+                    System.out.print(0+" ");
+                    continue;
                 }
-                System.out.print(result[i][j] + " ");
+                if (visited[i][j] > 0) {
+                    System.out.print(visited[i][j]-1+" ");
+                }
+                else {
+                    System.out.print(-1+" ");
+                }
             }
             System.out.println();
         }
     }
-
-    public static void bfs(int x, int y) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{x, y});
-        visited[x][y] = true;
-
-        while (!queue.isEmpty()) {
-            int tmp[] = queue.poll();
-            for (int i = 0; i < 4; i++) {
-                int nx = tmp[0] + dx[i];
-                int ny = tmp[1] + dy[i];
-                if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
-                    if (!visited[nx][ny] && graph[nx][ny] == 1) {
-                        visited[nx][ny] = true;
-                        result[nx][ny] = result[tmp[0]][tmp[1]] + 1;
-                        queue.add(new int[]{nx, ny});
-                    }
-                }
+    static void bfs(int x, int y) {
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+        ArrayDeque<int[]> q = new ArrayDeque<>();
+        q.add(new int[]{x, y});
+        visited[x][y] = 1;
+        while(!q.isEmpty()) {
+            int[] now = q.poll();
+            for(int i=0; i<4; i++) {
+                int nx = now[0]+dx[i], ny = now[1]+dy[i];
+                if (nx < 0 || ny < 0 || nx > n - 1 || ny > m - 1)
+                    continue;
+                if (visited[nx][ny] > 0) continue;
+                if (arr[nx][ny] == 0) continue;
+                visited[nx][ny] = visited[now[0]][now[1]] + 1;
+                q.add(new int[]{nx, ny});
             }
         }
     }
