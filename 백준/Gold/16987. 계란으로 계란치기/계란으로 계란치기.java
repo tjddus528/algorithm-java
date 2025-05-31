@@ -1,79 +1,61 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
-	
-	static int N;
-	static int[] dura;
-	static int[] weight;
-	static int max = Integer.MIN_VALUE;
-	
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		N = Integer.parseInt(br.readLine());
-		dura = new int[N];
-		weight = new int[N];
-		
-		for(int i=0; i<N; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			dura[i] = Integer.parseInt(st.nextToken()); // 계란의 내구도
-			weight[i] = Integer.parseInt(st.nextToken()); // 계란의 무게
-		}
-		
-		bt(0, 0); // 0번째 계란부터 시작 , 이 땐 깨진 계란 0개
-		
-		System.out.println(max);
-	}
-	
-	static void bt(int idx, int cnt) {
-		// 마지막 계란까지 다 들어봤으면 종료
-		if(idx == N) {
-			// 최댓값 갱신
-			max = Math.max(max, cnt);
-			return;
-		}
-		// 손으로 든 계란이 이미 깨졌거나 모든 계란이 이미 다 깨져 있다면
-		if(dura[idx] <= 0 || cnt == N-1) {
-			// 다음 계란을 들어 봄
-			bt(idx + 1, cnt);
-			return;
-		}
-		// 다른 계란들과 모두 부딪혀봄
-		int nCnt = cnt;
-		for(int i=0; i<N; i++) {
-			// 손으로 들고 있는 계란과 부딪히려고 하는 계란이 같은 계란이라면 통과
-			if(i == idx) continue;
-			// 부딪혀 보려고 하는 계란이 이미 깨져있다면 통과
-			if(dura[i] <= 0) continue;
-			// 계란끼리 부딪혀봄 (현재 손에 들고 있는 계란의 인덱스, 부딪혀보려는 타겟 계란 인덱스)
-			hitEgg(idx, i);
-			// 부딪혀 봤는데 손에 든 계란이 깨지면 cnt++
-			if(dura[idx] <= 0) {
-				cnt++;
-			}
-			// 부딪혀 봤는데 타겟이 된 계란이 깨지면 cnt++
-			if(dura[i] <= 0) {
-				cnt++;
-			}
-			// 재귀 호출 -> 다음 계란 들어 봄
-			bt(idx + 1, cnt);
-			// for문의 다음 i를 위해 값을 원상복구 해 줌
-			recoveryEgg(idx, i);
-			cnt = nCnt;
-		}
-	}
-	
-	// 계란끼리 부딪혀보는 메소드
-	static void hitEgg(int handEgg, int targetEgg) {
-		dura[targetEgg] -= weight[handEgg];
-		dura[handEgg] -= weight[targetEgg];
-	}
-	
-	// 다시 원상복구 하는 메소드
-	static void recoveryEgg(int handEgg, int targetEgg) {
-		dura[targetEgg] += weight[handEgg];
-		dura[handEgg] += weight[targetEgg];		
-	}
-	
+    static int N;
+    static int[][] eggs;
+    static int maxCnt;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        eggs = new int[N][2];
+        for(int i=0; i<N; i++) {
+            // 내구도, 무게
+            String[] data = br.readLine().split(" ");
+            eggs[i][0] = Integer.parseInt(data[0]);
+            eggs[i][1] = Integer.parseInt(data[1]);
+        }
+
+        dfs(0, 0);
+        System.out.println(maxCnt);
+
+    }
+    static void dfs(int depth, int cnt) {
+        if(depth == N) {
+            maxCnt = Math.max(maxCnt, cnt);
+            return;
+        }
+
+        if(eggs[depth][0] <=0 || cnt == N-1) {
+            dfs(depth+1, cnt);
+            return;
+        }
+
+        int originCnt = cnt;
+        for(int i=0; i<N; i++) {
+            if(depth == i) continue;
+            if(eggs[i][0] <= 0) continue;
+
+            int[] pick = eggs[i];
+            eggs[depth][0] -= pick[1];
+            pick[0] -= eggs[depth][1];
+
+            // 손에 든 계란이 깨짐
+            if(eggs[depth][0] <= 0) {
+                cnt++;
+            }
+            // 손에 든 계란이 아닌 계란 중 선택했던 계란이 깨짐
+            if(pick[0] <= 0) {
+                cnt++;
+            }
+
+            dfs(depth+1, cnt);
+            eggs[depth][0] += pick[1];
+            pick[0] += eggs[depth][1];
+            cnt = originCnt;
+        }
+    }
+
 }
