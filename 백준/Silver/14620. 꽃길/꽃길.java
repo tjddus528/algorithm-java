@@ -1,70 +1,68 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int n, answer = Integer.MAX_VALUE;
-    static int[][] board;
-    static boolean[][] visited;
-    static int[][] move = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-    public static void main(String[] args) throws Exception {
+    static int N;
+    static int[][] arr;
+    static int minPrice = Integer.MAX_VALUE;
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        board = new int[n][n];
-        visited = new boolean[n][n];
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-            for (int j = 0; j < n; j++) {
-                board[i][j] = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N][N];
+        for(int i=0; i<N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j=0; j<N; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        dfs(0,0);
-        System.out.println(answer);
-    }
+        boolean[][] flower = new boolean[N][N];
+        dfs(0, 0, flower);
+        System.out.println(minPrice);
 
-    static void dfs(int cnt, int sum) {
-        if (cnt == 3) { // 꽃 3개를 다 설치한 경우
-            answer = Math.min(answer, sum); // 최소 비용으로 갱신
+    }
+    static void dfs(int depth, int price, boolean[][] flower) {
+        if(depth == 3) {
+            minPrice = Math.min(minPrice, price);
             return;
         }
-
-        for (int i = 1; i < n; i++) {
-            for (int j = 1; j < n; j++) {
-                if (visited[i][j]) continue;
-
-                Pos[] pos = new Pos[4];
-                boolean isOut = false;
-                int total = board[i][j];
-                for (int k = 0; k < 4; k++) {
-                    int nx = i + move[k][0];
-                    int ny = j + move[k][1];
-                    if (nx < 0 || ny < 0 || nx >= n || ny >= n || visited[nx][ny]) {
-                        isOut = true;
-                        break;
-                    }
-                    pos[k] = new Pos(nx, ny);
-                    total += board[nx][ny];
-                }
-                if (isOut) continue;
-
-                visited[i][j] = true;
-                for (Pos p : pos) {
-                    visited[p.x][p.y] = true;
-                }
-                dfs(cnt + 1, sum + total);
-                visited[i][j] = false;
-                for (Pos p : pos) {
-                    visited[p.x][p.y] = false;
-                }
+        for(int i=1; i<N; i++) {
+            for(int j=1; j<N; j++) {
+                if(flower[i][j]) continue;
+                if(!possible(i, j, flower)) continue;
+                seed(i, j, flower);
+                dfs(depth+1, price+calPrice(i, j), flower);
+                unseed(i, j, flower);
             }
         }
     }
-
-    static class Pos {
-        int x, y;
-
-        public Pos(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
+    static boolean possible(int x, int y, boolean[][] flower) {
+        if(x-1<0 || y-1<0 || x+1 >N-1 || y+1 >N-1) return false;
+        if(flower[x-1][y] || flower[x][y-1] || flower[x+1][y] || flower[x][y+1]) return false;
+        return true;
+    }
+    static void seed(int x, int y, boolean[][] flower) {
+        flower[x][y] = true;
+        if(x-1>=0) flower[x-1][y] = true;
+        if(y-1>=0) flower[x][y-1] = true;
+        if(x+1<N)  flower[x+1][y] = true;
+        if(y+1<N)  flower[x][y+1] = true;
+    }
+    static void unseed(int x, int y, boolean[][] flower) {
+        flower[x][y] = false;
+        if(x-1>=0) flower[x-1][y] = false;
+        if(y-1>=0) flower[x][y-1] = false;
+        if(x+1<N)  flower[x+1][y] = false;
+        if(y+1<N)  flower[x][y+1] = false;
+    }
+    static int calPrice(int x, int y) {
+        int total = 0;
+        total += arr[x][y];
+        if(x-1>=0) total += arr[x-1][y];
+        if(y-1>=0) total += arr[x][y-1];
+        if(x+1<N)  total += arr[x+1][y];
+        if(y+1<N)  total += arr[x][y+1];
+        return total;
     }
 }
