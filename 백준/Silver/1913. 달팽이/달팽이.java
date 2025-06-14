@@ -1,24 +1,38 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class Main {
     static int N, target;
     static int[][] arr;
-    static String result;
+    static String result="";
     static int[] dx = {-1, 0, 1, 0};
     static int[] dy = {0, 1, 0, -1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        
         N = Integer.parseInt(br.readLine());
         target = Integer.parseInt(br.readLine());
         arr = new int[N][N];
 
         arr[N/2][N/2] = 1;
         snail(2, 0);
-        print();
-        System.out.println(result);
+        
+        
+        for(int i=0; i<N; i++) {
+            for(int j=0; j<N; j++) {
+                bw.write(arr[i][j]+" ");
+            }
+            bw.write("\n");
+        }
+        bw.write(result);
+        bw.flush();
+        bw.close();
+        br.close();
     }
 
     private static void snail(int num, int dir) {
@@ -44,15 +58,6 @@ public class Main {
                 dir = (dir+1)%4;
             }
             cnt++;
-        }
-    }
-
-    private static void print() {
-        for(int i=0; i<N; i++) {
-            for(int j=0; j<N; j++) {
-                System.out.print(arr[i][j]+" ");
-            }
-            System.out.println();
         }
     }
 }
