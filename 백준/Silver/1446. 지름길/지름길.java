@@ -29,25 +29,27 @@ public class Main {
             return a[0]-b[0];
         });
 
-        // 가능한 지름길 선택해서 간 다음 백트래킹
-        bt(0, 0, 0);
-        System.out.println(result);
+        dp();
 
     }
-    static void bt(int depth, int cur, int total) {
-        if(depth == N) {
-            result = Math.min(result, total+(D-cur));
-            return;
+    static void dp() {
+        int[] d = new int[D+1];
+        // d[i] = i까지 갈 때 필요한 거리의 최소
+        // 초기화
+        for(int i=0; i<=D; i++) {
+            d[i] =i;
         }
-        int start = path[depth][0];
-        int end   = path[depth][1];
-        int dist  = path[depth][2];
 
-        // 해당 지름길 선택 가능
-        if(cur <= start && end <= D) {
-            bt(depth+1, end, total+(start-cur)+Math.min(dist, end-start));
+        for(int j=1; j<=D; j++) {
+            d[j] = Math.min(d[j], d[j-1]+1);
+            for (int i = 0; i < N; i++) {
+                int start = path[i][0];
+                int end = path[i][1];
+                int dist = path[i][2];
+                if (j == end)
+                    d[j] = Math.min(d[j], d[start] +dist);
+            }
         }
-        // 해당 지름길 못 감
-        bt(depth+1, cur, total);
+        System.out.println(d[D]);
     }
 }
