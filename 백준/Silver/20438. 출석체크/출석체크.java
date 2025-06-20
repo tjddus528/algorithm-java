@@ -10,6 +10,7 @@ public class Main {
     static int N, K, Q, M;
     static boolean[] students;
     static int[] check;
+    static int[] count;
     static int[][] range;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,30 +28,30 @@ public class Main {
         for(int i=0; i<K; i++) sleep.add(Integer.parseInt(st.nextToken()));
 
         st = new StringTokenizer(br.readLine());
-        for(int i=0; i<Q; i++) check[i] = Integer.parseInt(st.nextToken());
-
-        for(int i=0; i<M; i++) {
-            st = new StringTokenizer(br.readLine());
-            range[i][0] = Integer.parseInt(st.nextToken());
-            range[i][1] = Integer.parseInt(st.nextToken());
-        }
-
-        for(int ch: check) {
-            if(sleep.contains(ch)) continue;
+        for(int i=0; i<Q; i++) {
+            int num = Integer.parseInt(st.nextToken());
+            if(sleep.contains(num)) continue;
             int multi = 1;
-            while(ch*multi <= N+2) {
-                if(!sleep.contains(ch*multi)) students[ch*multi] = true;
+            while(num*multi <= N+2) {
+                int next = num*multi;
+                if(!sleep.contains(next)) students[next] = true;
                 multi++;
             }
         }
-        for(int[] rg: range) {
-            int start = rg[0];
-            int end = rg[1];
-            int cnt = 0;
-            for(int i = start; i<=end; i++) {
-                if(!students[i]) cnt++;
-            }
-            System.out.println(cnt);
+
+        // 누적합
+        count = new int[N+3];
+        for(int i=3; i<=N+2; i++) {
+            count[i] = count[i-1] + (students[i]? 0 : 1);
+        }
+
+        for(int i=0; i<M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+
+            int result = count[end] - count[start-1];
+            System.out.println(result);
         }
 
     }
