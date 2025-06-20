@@ -45,14 +45,16 @@ public class Main {
             count[i] = count[i-1] + (students[i]? 0 : 1);
         }
 
+        StringBuilder sb = new StringBuilder();
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
             int start = Integer.parseInt(st.nextToken());
             int end = Integer.parseInt(st.nextToken());
 
             int result = count[end] - count[start-1];
-            System.out.println(result);
+            sb.append(result).append("\n");
         }
+        System.out.println(sb);
 
     }
 }
