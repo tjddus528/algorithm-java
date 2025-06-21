@@ -1,75 +1,67 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
-class Main{
-    public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int T = Integer.parseInt(br.readLine());
-        StringBuilder sb = new StringBuilder();
-
-        while(T-- >0){
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int N = Integer.parseInt(st.nextToken());
-            int D = Integer.parseInt(st.nextToken());
-            int C = Integer.parseInt(st.nextToken());
-
-            int[] distance = new int[N+1];
-            for(int i=0;i<=N;i++) distance[i] = Integer.MAX_VALUE;
-            distance[C] = 0;
-
-            List<Node>[] graph = new ArrayList[N+1];
-            for(int i=1;i<=N;i++) graph[i] = new ArrayList<>();
-            for(int i=0;i<D;i++){
-                st = new StringTokenizer(br.readLine());
-                int a = Integer.parseInt(st.nextToken());
-                int b = Integer.parseInt(st.nextToken());
-                int s = Integer.parseInt(st.nextToken());
-                graph[b].add(new Node(a,s));
-            }
-
-            PriorityQueue<Node> queue = new PriorityQueue<>();
-            boolean[] check = new boolean[N+1];
-            queue.add(new Node(C,0));
-
-            while(!queue.isEmpty()){
-                Node curr = queue.poll();
-                if(check[curr.node]) continue;
-                check[curr.node] = true;
-
-                for(Node next : graph[curr.node]){
-                    if(distance[next.node] > distance[curr.node] + next.edge){
-                        distance[next.node] = distance[curr.node] + next.edge;
-                        queue.add(new Node(next.node, distance[next.node]));
-                    }
-                }
-            }
-
-            int cnt = 0;
-            int time = 0;
-            for(int i=1;i<=N;i++){
-                if(distance[i] != Integer.MAX_VALUE){
-                    cnt++;
-                    time = Math.max(time,distance[i]);
-                }
-            }
-            sb.append(cnt).append(" ").append(time).append("\n");
+public class Main {
+    static class Node implements Comparable<Node> {
+        int next;
+        int time;
+        Node(int nxt, int t) {
+            this.next = nxt;
+            this.time = t;
         }
-
-        System.out.println(sb);
-    }
-
-    static class Node implements Comparable<Node>{
-        int node;
-        int edge;
-
-        Node(int node, int edge){
-            this.node = node;
-            this.edge = edge;
-        }
-
         @Override
-        public int compareTo(Node o) {
-            return this.edge - o.edge;
+        public int compareTo(Node node) {
+            return this.time - node.time;
+        }
+    }
+    static int test;
+    static int N, D, C;
+    static List<List<Node>> graph;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        test = Integer.parseInt(br.readLine());
+        while(test --> 0) {
+            String[] data = br.readLine().split(" ");
+            N = Integer.parseInt(data[0]);
+            D = Integer.parseInt(data[1]);
+            C = Integer.parseInt(data[2]);
+
+            graph = new ArrayList<>();
+            for (int i = 0; i <= N; i++)
+                graph.add(new ArrayList<>());
+            for (int i = 0; i < D; i++) {
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                int b = Integer.parseInt(st.nextToken());
+                int a = Integer.parseInt(st.nextToken());
+                int t = Integer.parseInt(st.nextToken());
+                graph.get(a).add(new Node(b, t));
+            }
+
+            PriorityQueue<Node> pq = new PriorityQueue<>();
+            boolean[] visited = new boolean[N + 1];
+            pq.add(new Node(C, 0));
+            int cnt = 0;
+            int totalTime = 0;
+
+            while (!pq.isEmpty()) {
+                Node cur = pq.poll();
+                if (visited[cur.next])
+                    continue;
+                visited[cur.next] = true;
+                cnt++;
+                totalTime = cur.time;
+                for (Node nd : graph.get(cur.next)) {
+                    if (visited[nd.next])
+                        continue;
+                    pq.add(new Node(nd.next, cur.time + nd.time));
+                }
+            }
+            System.out.println(cnt + " " + totalTime);
         }
     }
 }
