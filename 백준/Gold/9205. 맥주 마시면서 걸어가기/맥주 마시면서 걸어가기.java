@@ -9,7 +9,7 @@ public class Main {
     static int[][] arr;
     static boolean[] visited;
     static String result;
-    static class BeerWalk implements Comparable<BeerWalk> {
+    static class BeerWalk {
         int x;
         int y;
         int cnt;
@@ -19,13 +19,6 @@ public class Main {
             this.y = y;
             this.cnt = cnt;
         }
-
-        // 맥주가 많이 남은 순으로 정렬(내림차순)
-        @Override
-        public int compareTo(BeerWalk o) {
-            return Integer.compare(o.cnt, this.cnt);
-        }
-        
     }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -54,9 +47,6 @@ public class Main {
             result = "happy";
             return;
         }
-        // 편의점이면 beer RESET
-        beer = 20;
-       
         visited[depth] = true;
         for(int i=0; i<N+2; i++) {
             int nx = arr[i][0];
@@ -69,9 +59,8 @@ public class Main {
             // 맨해튼 거리를 구해서, 현재 맥주로 가지 못하면
             int distance = dist(x, y, nx, ny);
             if(distance > 50 * beer) continue;
-            // 이동 가능하면 맥주를 소비하고 q에 넣기
-            int afterBeer = beer - distance / 50 ;
-            solve(i, nx, ny, afterBeer);
+            // 이동 가능하면 맥주 리셋
+            solve(i, nx, ny, 20);
         }
 
     }
