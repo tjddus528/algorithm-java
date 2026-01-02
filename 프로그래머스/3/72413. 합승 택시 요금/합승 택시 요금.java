@@ -1,6 +1,9 @@
 class Solution {
     static int[][] cost;
     public int solution(int n, int s, int a, int b, int[][] fares) {
+        int INF = Integer.MAX_VALUE;
+        System.out.println(INF);
+        System.out.println(INF+1);
         cost = new int[n+1][n+1];
         for(int i=1; i<=n; i++) {
             for(int j=1; j<=n; j++) {
@@ -13,6 +16,7 @@ class Solution {
         }
         for(int i=1; i<=n; i++) cost[i][i] = 0;
         
+        // 플로이드 워셜
         for(int k=1; k<=n; k++) {
             for(int i=1; i<=n; i++) {
                 for(int j=1; j<=n; j++) {
@@ -20,14 +24,6 @@ class Solution {
                 }
             }
         }
-        
-        // for(int i=1; i<=n; i++) {
-        //     for(int j=1; j<=n; j++) {
-        //         System.out.print(cost[i][j]+" ");
-        //     }
-        //     System.out.println();
-        // }
-        // System.out.println();
     
         int answer = cost[s][a] + cost[s][b];
         for(int k=1; k<=n; k++) {
