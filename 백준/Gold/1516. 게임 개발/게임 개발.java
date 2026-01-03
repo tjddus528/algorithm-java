@@ -10,16 +10,14 @@ public class Main {
     static int N;
     static int[] cost;
     static int[] indegree;
-    static boolean[] done;
-    static int[] dp;
+    static int[] prev;
     static List<List<Integer>> construct = new ArrayList<>();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
-        cost = new int[N+1];
-        indegree = new int[N+1];
-        done = new boolean[N+1];
-        dp = new int[N+1];
+        cost = new int[N+1];            // cost : 건물 건설 비용 (해당 건물을 짓기 위해 필요한 총 건설 비용)
+        prev = new int[N+1];            // prev : 해당 건물을 짓기 전 필요한 이전 건물 건설 비용
+        indegree = new int[N+1];        // indegree : 진입 차수 (해당 건물을 짓기 전 지어야 하는 건물 수)
         for(int i=0; i<=N; i++) construct.add(new ArrayList<>());
         for(int i=1; i<=N; i++) {
             String[] data = br.readLine().split(" ");
@@ -38,14 +36,14 @@ public class Main {
         while(!q.isEmpty()) {
             int now = q.poll();
             for(int next: construct.get(now)) {
-                dp[next] = Math.max(dp[next], dp[now] + cost[now]);
+                prev[next] = Math.max(prev[next], prev[now] + cost[now]);
                 indegree[next]--;
                 if(indegree[next]==0) q.add(next);
             }
         }
-        for(int i=1; i<=N; i++) {
-            System.out.println(dp[i]+cost[i]);
-        }
 
+        for(int i=1; i<=N; i++) {
+            System.out.println(cost[i] + prev[i]);
+        }
     }
 }
