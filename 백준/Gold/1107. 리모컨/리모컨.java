@@ -26,20 +26,25 @@ public class Main {
         // case2) 새로운 채널로 이동해서 +, -로 이동
         // 새로운 채널 : 버튼으로 만들 수 있는 모든 숫자 (최대 1_000_000)
         for(int ch=0; ch<=1_000_000; ch++) {
-            String[] channel = String.valueOf(ch).split("");
-            if(!isPossible(channel)) continue;
-            answer = Math.min(answer, Math.abs(ch - N) + channel.length);
+            int cnt = possibleCnt(ch);
+            if(cnt > 0) {
+                answer = Math.min(answer, Math.abs(ch - N) + cnt);
+            }
         }
         System.out.println(answer);
 
     }
 
-    static boolean isPossible(String[] channel) {
-        for(int i=0; i<channel.length; i++) {
-            int n = Integer.parseInt(channel[i]);
-            if(breaks.contains(n)) return false;
+    static int possibleCnt(int ch) {
+        int cnt = 0;
+        if (ch == 0) return breaks.contains(0) ? 0 : 1;
+
+        while(ch > 0) {
+            if(breaks.contains(ch%10)) return 0;
+            ch /= 10;
+            cnt++;
         }
-        return true;
+        return cnt;
     }
 
 }
