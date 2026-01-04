@@ -40,8 +40,7 @@ class Solution {
             if(isOver(target)) return new int[]{-1};
         }
         // 범위가 일치하면 카드를 오름차순으로 배분
-        answer = shareCard(0, 0, new int[order.size()], target);
-        return answer;
+        return shareCard(new int[order.size()], target);
     }
     static void dropCard(Node node) {
         if(node == null) return;
@@ -67,7 +66,7 @@ class Solution {
         }
         return false;
     }
-    static int[] shareCard(int idx, int cnt, int[] cards, int[] target) {
+    static int[] shareCard(int[] cards, int[] target) {
         for(int k=0; k<order.size(); k++) {
             for(int i=1; i<=3; i++) {
                 if((count[order.get(k)-1]-1)*3 + i >= target[order.get(k)-1]) {
