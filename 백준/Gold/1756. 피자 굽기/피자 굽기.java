@@ -14,42 +14,23 @@ public class Main {
         int[] depth = new int[D+2];
         int[] pizza = new int[N+1];
         st = new StringTokenizer(br.readLine());
-        for(int i=1; i<=D; i++) depth[i] = Integer.parseInt(st.nextToken());
+        for(int i=1; i<=D; i++) {
+            depth[i] = Integer.parseInt(st.nextToken());
+            if(i != 1) depth[i] = Math.min(depth[i], depth[i-1]);
+        }
         st = new StringTokenizer(br.readLine());
         for(int i=1; i<=N; i++) pizza[i] = Integer.parseInt(st.nextToken());
 
-        int min = depth[1];
-        for(int i=1; i<=D; i++) {
-            min = Math.min(min, depth[i]);
-            depth[i] = min;
-        }
-
-        int first = 0;
-        for(int i=1; i<=D+1; i++) {
-            if(depth[i] < pizza[1]) {
-                first = i-1;
-                break;
+        int idx = D+1;
+        for(int i=1; i<=N; i++) {
+            while(idx > 0 && depth[idx] < pizza[i]) idx--;
+            idx--;
+            if(idx <= 0) {
+                System.out.println(0);
+                return;
             }
         }
-        if(first == 0) {
-            System.out.println(0);
-            return;
-        }
-        int idx = first-1;
-        int nth = 2;
-        while(nth <= N && idx>0) {
-            if(depth[idx] >= pizza[nth]) {
-                idx--;
-                nth++;
-            }
-            else {
-                idx--;
-            }
-        }
-        if(nth == N+1)
-            System.out.println(idx + 1);
-        else
-            System.out.println(0);
+        System.out.println(idx+1);
     }
 
 }
